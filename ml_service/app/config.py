@@ -40,3 +40,8 @@ assert all(lag >= FORECAST_HORIZON_HOURS for lag in LAG_HOURS), (
 TRAIN_END = "2022-06-30 23:00:00"
 VALIDATION_END = "2022-08-31 23:00:00"
 # Test = everything after VALIDATION_END.
+
+# ------------------------------------------------------------- holidays
+# Ahmedabad is in Gujarat, India. Holidays are known in advance, so no leakage.
+HOLIDAY_COUNTRY = "IN"
+HOLIDAY_SUBDIVISION = "GJ"
