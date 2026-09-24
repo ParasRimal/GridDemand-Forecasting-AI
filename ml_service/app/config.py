@@ -50,3 +50,9 @@ HOLIDAY_SUBDIVISION = "GJ"
 # Windows END at (target hour - horizon), so they only use loads known at forecast time.
 ROLLING_WINDOWS_HOURS = [24, 168]   # last day, last week
 ROLLING_MIN_FRACTION = 0.5          # a window needs >= 50% of its hours to have data
+
+# -------------------------------------------------------------- weather
+# Decision: use the ACTUAL weather at the target hour. In production this stands
+# in for a weather forecast, so real-world accuracy would be somewhat lower.
+# Phase 2 compares models with, without, and with lagged weather.
+WEATHER_ASSUMPTION = "actual_at_target_hour"
