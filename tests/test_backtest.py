@@ -61,3 +61,42 @@ def test_beats_flag_matches_the_scores():
     assert (out["beats_baseline"] == (out["model_mae"] < out["baseline_mae"])).all()
     # y = 3a + b is learnable from a and b, while lag_24 is just noise, so the model should win.
     assert out["beats_baseline"].all()
+
+
+def test_unknown_target_mode_is_rejected():
+    with pytest.raises(ValueError):
+        bt.backtest(make_df(), "xgboost", first_fold="2022-03", features=FEATURES, target_mode="nope")
+
+
+def test_delta_mode_trains_on_the_change_from_the_lag(monkeypatch):
+    seen = {}
+
+    class Spy:
+        def fit(self, X, y):
+            seen["X"], seen["y"] = X, y
+
+        def predict(self, X):
+            return np.zeros(len(X))
+
+    monkeypatch.setattr(bt, "build_model", lambda name: Spy())
+    df = make_df()
+    bt.backtest(df, "xgboost", first_fold="2022-08", features=FEATURES, target_mode="delta_baseline")
+    idx = seen["X"].index
+    expected = df.loc[idx, TARGET] - df.loc[idx, "lag_24"]
+    pd.testing.assert_series_equal(seen["y"], expected, check_names=False, check_freq=False)
+    assert seen["y"].notna().all()
+
+
+def test_delta_mode_adds_the_lag_back_to_the_predictions(monkeypatch):
+    class Zero:
+        def fit(self, X, y):
+            pass
+
+        def predict(self, X):
+            return np.zeros(len(X))
+
+    monkeypatch.setattr(bt, "build_model", lambda name: Zero())
+    out = bt.backtest(make_df(), "xgboost", first_fold="2022-03", features=FEATURES,
+                      target_mode="delta_baseline")
+    # A predicted change of 0 means "same as yesterday", so the model must equal the baseline.
+    assert out["model_mae"].to_numpy() == pytest.approx(out["baseline_mae"].to_numpy())
