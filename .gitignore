@@ -58,3 +58,6 @@ Thumbs.db
 # Temporary
 *.tmp
 *.temp
+
+# Pytest
+.pytest_cache/
