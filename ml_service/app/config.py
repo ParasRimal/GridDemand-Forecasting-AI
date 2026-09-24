@@ -96,3 +96,7 @@ LIGHTGBM_PARAMS = {
 # treated as tied, and the lowest RMSE among them wins. The test set is never used.
 BASELINE_LAG_HOURS = 24            # "same hour yesterday"
 SELECTION_TIE_TOLERANCE_MW = 0.1
+
+# ------------------------------------------------------------ artifacts
+# Trained models are saved here, one timestamped folder per save.
+MODELS_DIR = PROJECT_ROOT / "models"
