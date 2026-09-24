@@ -67,3 +67,25 @@ RANDOM_FOREST_PARAMS = {
     "max_features": 0.5,      # each split looks at half the features, so trees differ
     "n_jobs": -1,             # use all CPU cores
 }
+
+XGBOOST_PARAMS = {
+    "n_estimators": 300,
+    "learning_rate": 0.05,    # small steps, so each tree corrects only part of the error
+    "max_depth": 6,
+    "subsample": 0.8,         # each tree sees 80% of the rows
+    "colsample_bytree": 0.8,  # and 80% of the features
+    "tree_method": "hist",
+    "n_jobs": -1,
+}
+LIGHTGBM_PARAMS = {
+    "n_estimators": 300,
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "min_child_samples": 20,  # each leaf needs >= 20 rows
+    "subsample": 0.8,
+    "subsample_freq": 1,      # LightGBM only applies `subsample` if this is >= 1
+    "colsample_bytree": 0.8,
+    "deterministic": True,    # same data + same seed = same model
+    "n_jobs": -1,
+    "verbose": -1,
+}
