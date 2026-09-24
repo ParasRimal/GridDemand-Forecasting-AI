@@ -45,3 +45,8 @@ VALIDATION_END = "2022-08-31 23:00:00"
 # Ahmedabad is in Gujarat, India. Holidays are known in advance, so no leakage.
 HOLIDAY_COUNTRY = "IN"
 HOLIDAY_SUBDIVISION = "GJ"
+
+# -------------------------------------------------------------- rolling
+# Windows END at (target hour - horizon), so they only use loads known at forecast time.
+ROLLING_WINDOWS_HOURS = [24, 168]   # last day, last week
+ROLLING_MIN_FRACTION = 0.5          # a window needs >= 50% of its hours to have data
