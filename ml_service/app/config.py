@@ -56,3 +56,14 @@ ROLLING_MIN_FRACTION = 0.5          # a window needs >= 50% of its hours to have
 # in for a weather forecast, so real-world accuracy would be somewhat lower.
 # Phase 2 compares models with, without, and with lagged weather.
 WEATHER_ASSUMPTION = "actual_at_target_hour"
+
+# ------------------------------------------------------------- training
+# Fixed seed so training is reproducible. Model settings below are sensible
+# defaults, NOT tuned. Any later tuning must use the validation set only.
+RANDOM_SEED = 42
+RANDOM_FOREST_PARAMS = {
+    "n_estimators": 300,      # number of trees
+    "min_samples_leaf": 2,    # each leaf needs >= 2 rows, which reduces memorizing noise
+    "max_features": 0.5,      # each split looks at half the features, so trees differ
+    "n_jobs": -1,             # use all CPU cores
+}
