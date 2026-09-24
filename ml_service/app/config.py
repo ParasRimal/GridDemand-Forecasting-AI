@@ -89,3 +89,10 @@ LIGHTGBM_PARAMS = {
     "n_jobs": -1,
     "verbose": -1,
 }
+
+# ------------------------------------------------------------ selection
+# Rule: a model is eligible only if its validation MAE is strictly below the baseline's.
+# The lowest MAE wins. Eligible models within the tolerance of the best MAE are
+# treated as tied, and the lowest RMSE among them wins. The test set is never used.
+BASELINE_LAG_HOURS = 24            # "same hour yesterday"
+SELECTION_TIE_TOLERANCE_MW = 0.1
