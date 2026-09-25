@@ -13,5 +13,6 @@ def root_status(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('forecasts.urls')),
+    path('api/', include('model_registry.urls')),
     path('', root_status),
 ]
