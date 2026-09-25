@@ -1,0 +1,42 @@
+{
+  "production": {
+    "type": "baseline",
+    "name": "naive_lag_24",
+    "description": "Same hour yesterday (lag_24). Default production model until a challenger proves better.",
+    "mae": 9.01
+  },
+  "history": [
+    {
+      "timestamp": "2026-09-25T01:50:50.134835+00:00",
+      "challenger": "xgboost_full",
+      "challenger_mae": 10.67,
+      "challenger_metrics": {
+        "mae": 10.67,
+        "rmse": 13.42,
+        "mape": 13.8,
+        "r2": 0.671
+      },
+      "production_mae_before": 9.01,
+      "improvement_mw": -1.6600000000000001,
+      "min_improvement_required_mw": 0.3,
+      "promoted": false,
+      "reason": "xgboost_full did not beat production by more than 0.3 MW (improvement was -1.66 MW)."
+    },
+    {
+      "timestamp": "2026-09-25T01:50:50.135203+00:00",
+      "challenger": "random_forest_no_season",
+      "challenger_mae": 10.4,
+      "challenger_metrics": {
+        "mae": 10.4,
+        "rmse": 13.24,
+        "mape": 13.3,
+        "r2": 0.68
+      },
+      "production_mae_before": 9.01,
+      "improvement_mw": -1.3900000000000006,
+      "min_improvement_required_mw": 0.3,
+      "promoted": false,
+      "reason": "random_forest_no_season did not beat production by more than 0.3 MW (improvement was -1.39 MW)."
+    }
+  ]
+}

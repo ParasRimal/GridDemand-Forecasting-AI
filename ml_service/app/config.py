@@ -110,3 +110,10 @@ BACKTEST_MIN_FOLD_FRACTION = 0.7
 BACKTEST_TIE_TOLERANCE_MW = 0.1
 # Calendar columns that only identify the season (the "no_season" variant drops them).
 SEASON_FEATURES = ["month", "quarter", "week_of_year"]
+
+# --------------------------------------------------------- promotion gate
+# A challenger is promoted only if it beats the CURRENT production model's
+# MAE by more than this margin, on the evaluation rows both are scored on.
+# This avoids swapping the production model over noise-sized differences.
+PROMOTION_MIN_MAE_IMPROVEMENT_MW = 0.3
+REGISTRY_PATH = MODELS_DIR / "registry.json"

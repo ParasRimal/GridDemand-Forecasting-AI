@@ -65,3 +65,4 @@ Thumbs.db
 # Trained model artifacts (keep the folder, not the files)
 models/*
 !models/.gitkeep
+!models/registry.json
