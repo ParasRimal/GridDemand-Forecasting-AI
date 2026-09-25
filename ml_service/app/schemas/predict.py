@@ -64,3 +64,18 @@ class PredictResponse(BaseModel):
     predicted_load_mw: float
     model_type: str
     model_name: Optional[str] = None
+
+
+class BatchPredictRequest(BaseModel):
+    items: list[PredictRequest]
+
+
+class BatchResultItem(BaseModel):
+    index: int
+    success: bool
+    result: Optional[PredictResponse] = None
+    error: Optional[str] = None
+
+
+class BatchPredictResponse(BaseModel):
+    results: list[BatchResultItem]

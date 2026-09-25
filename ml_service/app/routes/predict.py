@@ -9,7 +9,13 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Request
 
-from ml_service.app.schemas.predict import PredictRequest, PredictResponse
+from ml_service.app.schemas.predict import (
+    BatchPredictRequest,
+    BatchPredictResponse,
+    BatchResultItem,
+    PredictRequest,
+    PredictResponse,
+)
 
 router = APIRouter()
 
@@ -39,3 +45,37 @@ def predict(payload: PredictRequest, request: Request) -> PredictResponse:
         model_type=info["type"],
         model_name=info["name"],
     )
+
+
+@router.post("/predict/batch", response_model=BatchPredictResponse)
+def predict_batch(payload: BatchPredictRequest, request: Request) -> BatchPredictResponse:
+    production_model = request.app.state.production_model
+    if production_model is None:
+        raise HTTPException(status_code=503, detail="Production model is not loaded yet.")
+
+    results: list[BatchResultItem] = []
+    for i, item in enumerate(payload.items):
+        try:
+            row = item.to_feature_row()
+            missing = [c for c in production_model.required_features if c not in row.columns]
+            if missing:
+                raise ValueError(
+                    f"Missing required feature(s) for the current production model "
+                    f"({production_model.model_type}): {missing}"
+                )
+            prediction = production_model.predict(row)
+            info = production_model.info()
+            results.append(BatchResultItem(
+                index=i,
+                success=True,
+                result=PredictResponse(
+                    timestamp=item.timestamp,
+                    predicted_load_mw=float(prediction.iloc[0]),
+                    model_type=info["type"],
+                    model_name=info["name"],
+                ),
+            ))
+        except Exception as exc:
+            results.append(BatchResultItem(index=i, success=False, error=str(exc)))
+
+    return BatchPredictResponse(results=results)
