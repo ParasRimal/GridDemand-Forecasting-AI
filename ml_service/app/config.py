@@ -128,3 +128,12 @@ REGISTRY_PATH = MODELS_DIR / "registry.json"
 # avoids "retrain whenever data changes" -- a couple of flaky columns should
 # not trigger anything.
 DRIFT_SHARE_THRESHOLD = 0.5
+
+# ----------------------------------------------------- retraining decision
+# Performance is "degraded" when recent MAE exceeds the reference MAE by
+# more than this fraction (0.15 = 15% worse). A fraction (not a fixed MW
+# margin) is used because MAE naturally varies with the season's load level.
+PERFORMANCE_DEGRADATION_THRESHOLD = 0.15
+# Retraining is triggered if drift OR degradation is present (per project
+# requirements: "statistically significant drift AND/OR performance
+# degradation" -- not on data changing alone).
