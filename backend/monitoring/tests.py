@@ -1,13 +1,12 @@
 from django.test import TestCase
 from django.utils import timezone
+from rest_framework.test import APIClient
 
 from .models import DataMonitoring
 
 
 class DataMonitoringTests(TestCase):
     def test_can_record_a_drift_only_retrain_decision(self):
-        """Matches our actual Task 61 real-data result: drift detected,
-        no performance degradation, retrain recommended."""
         dm = DataMonitoring.objects.create(
             checked_at=timezone.now(),
             drift_detected=True,
@@ -48,3 +47,27 @@ class DataMonitoringTests(TestCase):
             drifted_column_count=14, n_columns=19, performance_degraded=False, retrain_recommended=True,
         )
         self.assertEqual(list(DataMonitoring.objects.all()), [newer, older])
+
+
+class DataMonitoringAPITests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.dm = DataMonitoring.objects.create(
+            checked_at=timezone.now(), drift_detected=True, drifted_column_share=0.737,
+            drifted_column_count=14, n_columns=19, performance_degraded=False, retrain_recommended=True,
+        )
+
+    def test_list_endpoint_returns_created_checks(self):
+        response = self.client.get("/api/monitoring/")
+        self.assertEqual(response.status_code, 200)
+        results = response.json()["results"] if "results" in response.json() else response.json()
+        self.assertEqual(len(results), 1)
+        self.assertTrue(results[0]["retrain_recommended"])
+
+    def test_write_methods_are_not_allowed(self):
+        response = self.client.post("/api/monitoring/", {
+            "checked_at": timezone.now().isoformat(), "drift_detected": False,
+            "drifted_column_share": 0.0, "drifted_column_count": 0, "n_columns": 19,
+            "performance_degraded": False, "retrain_recommended": False,
+        })
+        self.assertEqual(response.status_code, 405)

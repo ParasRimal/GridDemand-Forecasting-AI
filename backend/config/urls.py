@@ -14,5 +14,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('forecasts.urls')),
     path('api/', include('model_registry.urls')),
+    path('api/', include('monitoring.urls')),
     path('', root_status),
 ]
