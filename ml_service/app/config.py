@@ -100,3 +100,13 @@ SELECTION_TIE_TOLERANCE_MW = 0.1
 # ------------------------------------------------------------ artifacts
 # Trained models are saved here, one timestamped folder per save.
 MODELS_DIR = PROJECT_ROOT / "models"
+
+# ------------------------------------------------- backtest-based selection
+# A candidate is eligible only if it beats the baseline in at least this share of
+# backtest folds (0.7 -> 5 of 7 folds) AND its mean MAE is below the baseline's.
+# Among eligible candidates within the tolerance of the best mean MAE, the one that
+# beats the baseline in the most folds wins. The test set is never used.
+BACKTEST_MIN_FOLD_FRACTION = 0.7
+BACKTEST_TIE_TOLERANCE_MW = 0.1
+# Calendar columns that only identify the season (the "no_season" variant drops them).
+SEASON_FEATURES = ["month", "quarter", "week_of_year"]
