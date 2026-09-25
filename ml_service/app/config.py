@@ -117,3 +117,14 @@ SEASON_FEATURES = ["month", "quarter", "week_of_year"]
 # This avoids swapping the production model over noise-sized differences.
 PROMOTION_MIN_MAE_IMPROVEMENT_MW = 0.3
 REGISTRY_PATH = MODELS_DIR / "registry.json"
+
+# --------------------------------------------------------------- drift
+# Evidently's DriftedColumnsCount flags a column as drifted using its own
+# per-method thresholds (Wasserstein distance normed for numeric columns,
+# Jensen-Shannon distance for categorical/binary columns, both at 0.1 by
+# default). DRIFT_SHARE_THRESHOLD is OUR threshold on top of that: the
+# fraction of features that must be individually flagged before we consider
+# the DATASET AS A WHOLE to have drifted meaningfully. This deliberately
+# avoids "retrain whenever data changes" -- a couple of flaky columns should
+# not trigger anything.
+DRIFT_SHARE_THRESHOLD = 0.5
