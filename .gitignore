@@ -66,3 +66,6 @@ Thumbs.db
 models/*
 !models/.gitkeep
 !models/registry.json
+
+# Celery Beat runtime schedule (local artifact, not source)
+backend/celerybeat-schedule
