@@ -4,6 +4,7 @@ Every decision made during data inspection lives here, so no other file
 needs to hardcode these values.
 """
 from pathlib import Path
+import os
 
 # ---------------------------------------------------------------- paths
 # This file is ml_service/app/config.py -> project root is 2 levels up.
@@ -137,3 +138,14 @@ PERFORMANCE_DEGRADATION_THRESHOLD = 0.15
 # Retraining is triggered if drift OR degradation is present (per project
 # requirements: "statistically significant drift AND/OR performance
 # degradation" -- not on data changing alone).
+
+# ---------------------------------------------------------------- caching
+# Predictions are cached in Redis, keyed by their exact input values, so
+# repeated identical requests (e.g. dashboard polling) don't recompute.
+# If Redis is unreachable, caching fails open: predictions still work, just
+# without caching (logged as a warning), so a cache outage never breaks
+# the actual service.
+REDIS_HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
+REDIS_PORT = int(os.environ.get("REDIS_PORT", "6379"))
+PREDICTION_CACHE_TTL_SECONDS = 300
+PREDICTION_CACHE_KEY_PREFIX = "gridpredict:prediction:"

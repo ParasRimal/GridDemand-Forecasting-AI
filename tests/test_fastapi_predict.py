@@ -46,3 +46,15 @@ def test_invalid_timestamp_format_is_rejected():
             "lag_24": 90.0,
         })
         assert response.status_code in (400, 422)
+
+
+def test_repeated_identical_request_is_served_from_cache():
+    """The second identical call should return the same result; this also
+    exercises the real Redis instance since prediction_cache isn't mocked here."""
+    with TestClient(app) as client:
+        payload = {"timestamp": "2022-09-20T09:00:00", "lag_24": 77.7}
+        first = client.post("/predict", json=payload)
+        second = client.post("/predict", json=payload)
+        assert first.status_code == 200
+        assert second.status_code == 200
+        assert first.json() == second.json()

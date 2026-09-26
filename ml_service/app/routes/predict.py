@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Request
 
+from ml_service.app.caching.prediction_cache import get_cached_prediction, set_cached_prediction
 from ml_service.app.schemas.predict import (
     BatchPredictRequest,
     BatchPredictResponse,
@@ -26,6 +27,11 @@ def predict(payload: PredictRequest, request: Request) -> PredictResponse:
     if production_model is None:
         raise HTTPException(status_code=503, detail="Production model is not loaded yet.")
 
+    cache_payload = payload.model_dump(by_alias=True)
+    cached = get_cached_prediction(cache_payload)
+    if cached is not None:
+        return PredictResponse(**cached)
+
     row = payload.to_feature_row()
     missing = [c for c in production_model.required_features if c not in row.columns]
     if missing:
@@ -39,12 +45,14 @@ def predict(payload: PredictRequest, request: Request) -> PredictResponse:
 
     prediction = production_model.predict(row)
     info = production_model.info()
-    return PredictResponse(
+    result = PredictResponse(
         timestamp=payload.timestamp,
         predicted_load_mw=float(prediction.iloc[0]),
         model_type=info["type"],
         model_name=info["name"],
     )
+    set_cached_prediction(cache_payload, result.model_dump())
+    return result
 
 
 @router.post("/predict/batch", response_model=BatchPredictResponse)
