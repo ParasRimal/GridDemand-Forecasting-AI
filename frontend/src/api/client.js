@@ -9,3 +9,9 @@ export const apiClient = axios.create({
   baseURL: DJANGO_API_BASE,
   timeout: 5000,
 });
+
+// Separate client for non-/api/ endpoints (root status, health checks).
+export const djangoRootClient = axios.create({
+  baseURL: "http://127.0.0.1:8001",
+  timeout: 5000,
+});

@@ -10,3 +10,5 @@ export const mlClient = axios.create({
 
 export const getModelInfo = () => mlClient.get("/model").then((res) => res.data);
 export const predict = (payload) => mlClient.post("/predict", payload).then((res) => res.data);
+
+export const getMlHealth = () => mlClient.get("/health").then((res) => res.data);

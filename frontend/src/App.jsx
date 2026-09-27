@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import TryForecast from "./pages/TryForecast";
 import ModelHistory from "./pages/ModelHistory";
+import SystemStatus from "./pages/SystemStatus";
 import "./App.css";
 
 function Navbar() {
@@ -19,6 +20,7 @@ function Navbar() {
         <NavLink to="/" end className={linkClass}>Dashboard</NavLink>
         <NavLink to="/forecast" className={linkClass}>Try a Forecast</NavLink>
         <NavLink to="/history" className={linkClass}>Model History</NavLink>
+        <NavLink to="/status" className={linkClass}>System Status</NavLink>
       </div>
     </nav>
   );
@@ -33,6 +35,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/forecast" element={<TryForecast />} />
           <Route path="/history" element={<ModelHistory />} />
+          <Route path="/status" element={<SystemStatus />} />
         </Routes>
       </div>
     </BrowserRouter>
