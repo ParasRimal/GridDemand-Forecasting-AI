@@ -49,3 +49,12 @@ def historical_demand(request):
         for idx, row in daily.iterrows()
     ]
     return JsonResponse(data, safe=False)
+
+
+def modeling_findings(request):
+    """Serve the raw docs/MODELING_FINDINGS.md content as plain text,
+    so the frontend can render it with react-markdown."""
+    findings_path = PROJECT_ROOT / "docs" / "MODELING_FINDINGS.md"
+    if not findings_path.exists():
+        return JsonResponse({"error": "MODELING_FINDINGS.md not found."}, status=404)
+    return JsonResponse({"content": findings_path.read_text()})

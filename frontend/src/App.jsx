@@ -6,6 +6,7 @@ import SystemStatus from "./pages/SystemStatus";
 import MonitoringHistory from "./pages/MonitoringHistory";
 import HistoricalDemand from "./pages/HistoricalDemand";
 import FeatureImportance from "./pages/FeatureImportance";
+import About from "./pages/About";
 import "./App.css";
 
 function Navbar() {
@@ -27,6 +28,7 @@ function Navbar() {
         <NavLink to="/monitoring" className={linkClass}>Monitoring History</NavLink>
         <NavLink to="/demand" className={linkClass}>Historical Demand</NavLink>
         <NavLink to="/importance" className={linkClass}>Feature Importance</NavLink>
+        <NavLink to="/about" className={linkClass}>About</NavLink>
       </div>
     </nav>
   );
@@ -45,6 +47,7 @@ function App() {
           <Route path="/monitoring" element={<MonitoringHistory />} />
           <Route path="/demand" element={<HistoricalDemand />} />
           <Route path="/importance" element={<FeatureImportance />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </div>
     </BrowserRouter>
