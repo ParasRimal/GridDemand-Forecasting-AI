@@ -4,6 +4,7 @@ import TryForecast from "./pages/TryForecast";
 import ModelHistory from "./pages/ModelHistory";
 import SystemStatus from "./pages/SystemStatus";
 import MonitoringHistory from "./pages/MonitoringHistory";
+import HistoricalDemand from "./pages/HistoricalDemand";
 import "./App.css";
 
 function Navbar() {
@@ -23,6 +24,7 @@ function Navbar() {
         <NavLink to="/history" className={linkClass}>Model History</NavLink>
         <NavLink to="/status" className={linkClass}>System Status</NavLink>
         <NavLink to="/monitoring" className={linkClass}>Monitoring History</NavLink>
+        <NavLink to="/demand" className={linkClass}>Historical Demand</NavLink>
       </div>
     </nav>
   );
@@ -39,6 +41,7 @@ function App() {
           <Route path="/history" element={<ModelHistory />} />
           <Route path="/status" element={<SystemStatus />} />
           <Route path="/monitoring" element={<MonitoringHistory />} />
+          <Route path="/demand" element={<HistoricalDemand />} />
         </Routes>
       </div>
     </BrowserRouter>

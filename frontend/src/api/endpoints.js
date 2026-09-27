@@ -6,3 +6,5 @@ export const getMonitoring = () => apiClient.get("/monitoring/").then((res) => r
 
 export const getDjangoRootHealth = () => djangoRootClient.get("/").then((res) => res.data);
 export const getRedisHealth = () => djangoRootClient.get("/health/redis/").then((res) => res.data);
+
+export const getHistoricalDemand = () => apiClient.get("/historical-demand/").then((res) => res.data);
