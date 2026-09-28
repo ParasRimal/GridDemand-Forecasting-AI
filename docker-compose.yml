@@ -1,0 +1,66 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.fastapi
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      SQLITE_PATH: /data/db.sqlite3
+      ALLOWED_HOSTS: "127.0.0.1,localhost,django"
+    volumes:
+      - django_data:/data
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    command: celery -A config worker --loglevel=info
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      SQLITE_PATH: /data/db.sqlite3
+    volumes:
+      - django_data:/data
+    depends_on:
+      - redis
+      - django
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    command: celery -A config beat --loglevel=info -s /data/celerybeat-schedule
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      SQLITE_PATH: /data/db.sqlite3
+    volumes:
+      - django_data:/data
+    depends_on:
+      - redis
+      - django
+
+volumes:
+  django_data:

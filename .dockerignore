@@ -1,0 +1,7 @@
+myenv/
+frontend/node_modules/
+.git/
+**/__pycache__/
+backend/db.sqlite3
+backend/celerybeat-schedule
+.env

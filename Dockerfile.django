@@ -1,0 +1,18 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ ./backend/
+COPY ml_service/ ./ml_service/
+COPY data/ ./data/
+COPY models/ ./models/
+COPY docs/ ./docs/
+
+WORKDIR /app/backend
+
+EXPOSE 8001
+
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8001"]
