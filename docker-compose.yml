@@ -62,5 +62,15 @@ services:
       - redis
       - django
 
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - django
+      - fastapi
+
 volumes:
   django_data:
